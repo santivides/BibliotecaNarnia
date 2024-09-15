@@ -1,22 +1,16 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-// import HelloWorld from './components/HelloWorld.vue'
-import HomePage from './views/HomePage.vue';
+import { RouterLink, RouterView } from 'vue-router';
 </script>
 
+
 <template>
-  <RouterView>
-    <header>
-      <div class="wrapper">
-        <HomePage/>
-        
-      </div>
-    </header>
-    <nav>
-      <RouterLink/>
-    </nav>
-  </RouterView>
+  <!-- Aquí solo necesitamos el RouterView -->
+  <div>
+    <!-- RouterView es donde Vue Router cargará el componente según la ruta -->
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
+/* Añade estilos aquí */
 </style>

@@ -53,7 +53,6 @@ header {
   padding: 10px;
   display: flex;
   justify-content: space-between; 
-  z-index: 2;
 }
 
 
@@ -79,7 +78,6 @@ header {
   box-sizing: border-box;
   color: black;
   font-style: italic; 
-  z-index: 1;
 }
 
 .page-body h2 {
