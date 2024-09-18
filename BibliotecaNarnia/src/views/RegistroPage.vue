@@ -4,29 +4,29 @@
             <h1>Registro</h1>
             <div class="ingreso-campos">
                 <p>Nombre</p>
-                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+                <input v-model="nombre" type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
 
                 <p>Apellidos</p>
-                <input type="text" id="apellidos" name="apellidos" placeholder="Ingresa tus apellidos">
+                <input v-model="apellidos" type="text" id="apellidos" name="apellidos" placeholder="Ingresa tus apellidos">
 
                 <p>Correo</p>
-                <input type="email" id="correo" name="correo" placeholder="Ingresa tu correo">
+                <input v-model="correo" type="email" id="correo" name="correo" placeholder="Ingresa tu correo">
 
                 <p>Documento de identidad</p>
                 <div class="documento-opciones">
-                    <input type="radio" id="tarjeta" name="documento" value="tarjeta">
-                    <label for="tarjeta">Tarjeta de identidad</label><br>
-                    <input type="radio" id="cedula" name="documento" value="cedula">
-                    <label for="cedula">Cédula de ciudadanía</label><br>
-                    <input type="radio" id="pasaporte" name="documento" value="pasaporte">
-                    <label for="pasaporte">Pasaporte</label>
+                    <select v-model="tipoDocumento" name="tipoDocumento">
+                        <option value="tarjeta">Tarjeta de identidad</option>
+                        <option value="cedula">Cédula de ciudadanía</option>
+                        <option value="pasaporte">Pasaporte</option>
+                    </select>
+                    
                 </div>
 
                 <p>Número de documento</p>
-                <input type="text" id="num-documento" name="num-documento" placeholder="Ingresa tu número de documento">
+                <input v-model="numeroDocumento" type="text" id="num-documento" name="num-documento" placeholder="Ingresa tu número de documento">
             
                 <p>Contraseña</p>
-                <input type="password" id="contraseña" name="contraseña" placeholder="Ingresa tu contraseña">
+                <input v-model="contraseña" type="password" id="contraseña" name="contraseña" placeholder="Ingresa tu contraseña">
             </div>
 
             <div class="login-buttons">
@@ -40,9 +40,58 @@
 
 <script>
 export default {
-    name: 'RegistroComponent',
-    mounted() {
-        console.log('El componente de registro se ha montado');
+    data(){
+        return{
+            nombre: '',
+            apellidos: '',
+            correo: '',
+            tipoDocumento: '',
+            numeroDocumento: '',
+            contraseña: ''
+        };
+    },
+    methods:{
+            registrar(){
+                //lamada del metodo que enviará los datos al back
+                this.enviarDatos();
+            },
+            enviarDatos(){
+                //solicitud uml
+                const soapRequest = `
+                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:lib="xmlns:lib="http://localhost/BibliotecaNarnia/registro">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <lib:RegistrarUsuario>
+                    <lib:nombre>${this.nombre}</lib:nombre>
+                    <lib:apellidos>${this.apellidos}</lib:apellidos>
+                    <lib:correo>${this.correo}</lib:correo>
+                    <lib:tipoDocumento>${this.tipoDocumento}</lib:tipoDocumento>
+                    <lib:numeroDocumento>${this.numeroDocumento}</lib:numeroDocumento>
+                    <lib:contrasena>${this.contrasena}</lib:contrasena>
+                    </lib:RegistrarUsuario>
+                </soapenv:Body> 
+                </soapenv:Envelope>
+                `;
+
+                //configurar la solicitud
+                const url = 'http://localhost:5000/soap-endpoint';  // La URL del endpoint SOAP
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "text/xml",
+                    "SOAPAction": "http://biblioteca.local/servicios/RegistrarUsuario"
+                    },
+                    body: soapRequest // El cuerpo de la solicitud contiene el XML
+                    })
+                    .then(response => response.text()) //convierte la respuesta del servidor en texto
+                    .then(responseXML => {
+                        console.log("Respuesta del servidor:", responseXML); //procesa la respuesta xml del servidor
+                    })
+                    .catch(error => {
+                        console.error("Error en la solicitud SOAP:", error);
+                    });
+            }
     }
 }
 </script>
