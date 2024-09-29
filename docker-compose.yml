@@ -1,8 +1,14 @@
-version: '3.8'
+
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      
     ports:
       - "5173:5173"
     volumes:
-      - .:/app
+      - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+volumes:
+  node_modules:
